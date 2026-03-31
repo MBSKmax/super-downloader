@@ -1,0 +1,365 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- SEO TAGS -->
+    <title>SuperDownloader - Free Video & Audio Saver</title>
+    <meta
+      name="description"
+      content="Download videos and audio from Instagram, TikTok, Facebook, and more. Fast, free, and one-click installable web app."
+    />
+    <meta
+      name="keywords"
+      content="Instagram Downloader, TikTok MP4, Video Saver, Audio Extractor"
+    />
+    <link rel="manifest" href="/manifest.json" />
+    <style>
+      :root {
+        --primary: #6c5ce7;
+        --secondary: #a29bfe;
+        --dark: #2d3436;
+        --success: #00b894;
+        --warning: #e67e22;
+      }
+      body {
+        font-family: "Poppins", sans-serif;
+        background: #f0f2f5;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        min-height: 100vh;
+        color: var(--dark);
+        padding: 20px;
+      }
+      .app-card {
+        background: white;
+        width: 100%;
+        max-width: 450px;
+        padding: 30px;
+        border-radius: 24px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        box-sizing: border-box;
+      }
+      h1 {
+        font-size: 24px;
+        margin-bottom: 10px;
+        color: var(--primary);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+      }
+      p {
+        font-size: 14px;
+        color: #636e72;
+        margin-bottom: 25px;
+      }
+      input {
+        width: 100%;
+        padding: 15px;
+        border: 2px solid #dfe6e9;
+        border-radius: 12px;
+        outline: none;
+        margin-bottom: 20px;
+        box-sizing: border-box;
+        font-size: 15px;
+      }
+      input:focus {
+        border-color: var(--primary);
+      }
+      button {
+        width: 100%;
+        padding: 15px;
+        border: none;
+        border-radius: 12px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: 0.3s;
+        font-size: 16px;
+        margin-bottom: 10px;
+      }
+      .btn-main {
+        background: var(--primary);
+        color: white;
+      }
+      #installBtn {
+        background: var(--success);
+        color: white;
+        display: none;
+      }
+      #result {
+        display: none;
+        margin-top: 25px;
+        border-top: 1px solid #eee;
+        padding-top: 20px;
+        animation: fadeIn 0.5s ease;
+      }
+      .preview-img {
+        width: 100%;
+        border-radius: 15px;
+        margin-bottom: 15px;
+      }
+      .video-title {
+        font-size: 16px;
+        font-weight: 500;
+        margin-bottom: 15px;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        line-clamp: 2;
+        overflow: hidden;
+      }
+      .download-options {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .btn-dl-video {
+        background: #00cec9;
+        color: white;
+      }
+      .btn-dl-audio {
+        background: var(--warning);
+        color: white;
+      }
+      .btn-dl-thumb {
+        background: #fab1a0;
+        color: white;
+      }
+      .loader {
+        display: none;
+        width: 40px;
+        height: 40px;
+        border: 4px solid #f3f3f3;
+        border-top: 4px solid var(--primary);
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin: 20px auto;
+      }
+
+      /* New Content Styling */
+      .seo-content,
+      .legal-container {
+        max-width: 600px;
+        margin-top: 30px;
+        text-align: left;
+        background: #fff;
+        padding: 25px;
+        border-radius: 20px;
+        font-size: 14px;
+        line-height: 1.6;
+        color: #555;
+      }
+      .article-item {
+        border-bottom: 1px dashed #ddd;
+        padding-bottom: 15px;
+        margin-bottom: 15px;
+      }
+      .footer-nav {
+        margin-top: 20px;
+        text-align: center;
+        font-size: 12px;
+      }
+      .footer-nav a {
+        color: var(--primary);
+        text-decoration: none;
+        margin: 0 10px;
+        cursor: pointer;
+      }
+      #legal-view {
+        display: none;
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Main Downloader App -->
+    <div class="app-card" id="main-app">
+      <h1>🚀 SuperDownloader</h1>
+      <p>Fast Video & Audio Extraction</p>
+      <input
+        type="text"
+        id="videoUrl"
+        placeholder="Paste social media link here..."
+      />
+      <button class="btn-main" onclick="handleDownload()">Extract Media</button>
+      <button id="installBtn">📲 Install App (One-Click)</button>
+      <div class="loader" id="loader"></div>
+      <div id="result">
+        <img id="preview" class="preview-img" src="" />
+        <div id="vTitle" class="video-title"></div>
+        <div class="download-options">
+          <a id="videoLink" target="_blank"
+            ><button class="btn-dl-video">🎥 Download Video</button></a
+          >
+          <a id="audioLink" target="_blank"
+            ><button class="btn-dl-audio">🎵 Download Audio</button></a
+          >
+          <a id="thumbLink" target="_blank"
+            ><button class="btn-dl-thumb">🖼️ Save Thumbnail</button></a
+          >
+        </div>
+      </div>
+    </div>
+
+    <!-- Legal Pages View (Hidden by default) -->
+    <div class="legal-container" id="legal-view">
+      <h2 id="legal-title" style="color: var(--primary)"></h2>
+      <div id="legal-body"></div>
+      <button
+        onclick="showPage('home')"
+        style="
+          background: #eee;
+          color: #333;
+          margin-top: 20px;
+          width: auto;
+          padding: 10px 20px;
+        "
+      >
+        ← Back to Home
+      </button>
+    </div>
+
+    <!-- Blog / SEO Articles Section -->
+    <div class="seo-content" id="blog-section">
+      <h2 style="font-size: 18px; color: var(--primary); text-align: center">
+        Latest Media Guides
+      </h2>
+
+      <div class="article-item">
+        <h3>1. How to Download Pinterest Videos Easily</h3>
+        <p>
+          Pinterest is full of amazing creative content. To save a Pinterest
+          video, simply copy the link from the app, paste it into
+          SuperDownloader, and get the high-quality MP4 file instantly. No
+          registration required.
+        </p>
+      </div>
+
+      <div class="article-item">
+        <h3>2. Save LinkedIn Videos for Offline Viewing</h3>
+        <p>
+          LinkedIn videos often contain valuable professional insights. Our tool
+          allows you to extract these videos securely so you can watch them
+          anytime, anywhere, even without an internet connection.
+        </p>
+      </div>
+
+      <!-- New Articles will be added here daily -->
+    </div>
+
+    <!-- Footer Navigation -->
+    <div class="footer-nav">
+      <a onclick="showPage('home')">Home</a> |
+      <a onclick="showPage('privacy')">Privacy Policy</a> |
+      <a onclick="showPage('terms')">Terms of Use</a> |
+      <a onclick="showPage('contact')">Contact Us</a>
+      <p style="margin-top: 15px; color: #999">&copy; 2026 SuperDownloader</p>
+    </div>
+
+    <script>
+      // PWA Logic
+      let deferredPrompt;
+      const installBtn = document.getElementById("installBtn");
+      window.addEventListener("beforeinstallprompt", (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        installBtn.style.display = "block";
+      });
+      installBtn.addEventListener("click", async () => {
+        if (deferredPrompt) {
+          deferredPrompt.prompt();
+          const { outcome } = await deferredPrompt.userChoice;
+          if (outcome === "accepted") installBtn.style.display = "none";
+          deferredPrompt = null;
+        }
+      });
+
+      // Navigation Logic
+      function showPage(page) {
+        const mainApp = document.getElementById("main-app");
+        const blog = document.getElementById("blog-section");
+        const legalView = document.getElementById("legal-view");
+        const lTitle = document.getElementById("legal-title");
+        const lBody = document.getElementById("legal-body");
+
+        if (page === "home") {
+          mainApp.style.display = "block";
+          blog.style.display = "block";
+          legalView.style.display = "none";
+        } else {
+          mainApp.style.display = "none";
+          blog.style.display = "none";
+          legalView.style.display = "block";
+
+          if (page === "privacy") {
+            lTitle.innerText = "Privacy Policy";
+            lBody.innerHTML =
+              "We value your privacy. We do not store any of the videos you download or your personal information. Our tool fetches direct links from social media servers for real-time extraction.";
+          } else if (page === "terms") {
+            lTitle.innerText = "Terms of Use";
+            lBody.innerHTML =
+              "SuperDownloader is for personal use only. Please respect the copyrights of the original content creators. Commercial use of downloaded content is prohibited.";
+          } else if (page === "contact") {
+            lTitle.innerText = "Contact Us";
+            lBody.innerHTML =
+              "For any feedback or issues, please contact our student developer team at <b>support@superdownloader.test</b> (Replace with your email).";
+          }
+        }
+      }
+
+      // Download Function
+      async function handleDownload() {
+        const urlInput = document.getElementById("videoUrl").value;
+        const loader = document.getElementById("loader");
+        const resultDiv = document.getElementById("result");
+        if (!urlInput) return alert("Please paste a link!");
+        resultDiv.style.display = "none";
+        loader.style.display = "block";
+        try {
+          const response = await fetch("/api/get_video", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ url: urlInput }),
+          });
+          const data = await response.json();
+          if (data.download_url) {
+            document.getElementById("preview").src = data.thumbnail;
+            document.getElementById("vTitle").innerText = data.title;
+            document.getElementById("videoLink").href = data.download_url;
+            document.getElementById("audioLink").href = data.audio_url;
+            document.getElementById("thumbLink").href = data.thumbnail;
+            resultDiv.style.display = "block";
+          } else {
+            alert("Error: " + data.error);
+          }
+        } catch (err) {
+          alert("Server error! Backend is not responding.");
+        } finally {
+          loader.style.display = "none";
+        }
+      }
+    </script>
+  </body>
+</html>
